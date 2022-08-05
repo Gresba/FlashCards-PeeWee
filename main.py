@@ -16,13 +16,13 @@ class Card(BaseModel):
 
 db.create_tables([Card])
 
-def makeCard():
+def make_card():
     title = input('Title of Card: ')
     content = input('Content of Card: ')
     card = Card(title=title, content=content, correct = 0, incorrect = 0)
     card.save()
 
-def startGame(amountOfCards):
+def start_game(amountOfCards):
     cards = Card.select().limit(amountOfCards)
     for card in cards:
         answer = input(f"Card Title: {card.title}: What is the content? ")
@@ -36,16 +36,34 @@ def startGame(amountOfCards):
             card.incorrect = card.incorrect + 1
         card.save()
 
+def show_cards():
+    cards = Card.select()
+    counter = 1
+    for card in cards:
+        print("----------------------")
+        print(f"[ Card {counter} ]:")
+        print(f"Card: {card.title}")
+        print(f"Content: {card.content}")
+        print("----------------------\n")
+        counter = counter + 1
+
 choice = 0
 
-while choice != "3":
-    choice = input('Make a card or test knowledge?`\n1 - Make a card\n2 - Test knowledge\n3 - Exit\nChoice: ')
+while choice != "5":
+    choice = input('Choose an option\n1 - Show all cards\n2 - Make a card\n3 - Test knowledge\n4 - Delete Card\n5 - Exit\nChoice: ')
     if choice == "1":
-        makeCard()
+        show_cards()
     elif choice == "2":
-        amountOfCards = int(input('How many cards would you like to study? '))
-        startGame(amountOfCards)
+        make_card()
     elif choice == "3":
+        amountOfCards = int(input('How many cards would you like to study? '))
+        start_game(amountOfCards)
+    elif choice == "4":
+        title = input("Enter the title of the card you want to delete: ")
+        card = Card.get(Card.title == title)
+        card.delete_instance()
+        print(f"Deleted Card {title}")
+    elif choice == "5":
         print("Thank you for using flashcards")
         print("")
         print("Here is your current flashcards score (Correct/Incorrect)")
