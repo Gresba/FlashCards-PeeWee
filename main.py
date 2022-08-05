@@ -34,11 +34,23 @@ def startGame(amountOfCards):
             print('Incorrect!')
             card = Card.get(Card.title == card.title)
             card.incorrect = card.incorrect + 1
+        card.save()
 
-choice = input('Make a card or test knowledge?`\n1 - Make a card\n2 - Test knowledge\nChoice: ')
+choice = 0
 
-if choice == "1":
-    makeCard()
-elif choice == "2":
-    amountOfCards = int(input('How many cards would you like to study? '))
-    startGame(amountOfCards)
+while choice != "3":
+    choice = input('Make a card or test knowledge?`\n1 - Make a card\n2 - Test knowledge\n3 - Exit\nChoice: ')
+    if choice == "1":
+        makeCard()
+    elif choice == "2":
+        amountOfCards = int(input('How many cards would you like to study? '))
+        startGame(amountOfCards)
+    elif choice == "3":
+        print("Thank you for using flashcards")
+        print("")
+        print("Here is your current flashcards score (Correct/Incorrect)")
+        cards = Card.select()
+        for card in cards:
+            print(f"Flashcard Title: {card.title}")
+            print(f"Correct: {card.correct}")
+            print(f"Incorrect: {card.incorrect}\n")
