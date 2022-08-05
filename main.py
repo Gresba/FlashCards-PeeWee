@@ -14,18 +14,26 @@ class Card(BaseModel):
     correct = IntegerField()
     incorrect = IntegerField()
 
-db.drop_tables([Card])
 db.create_tables([Card])
 
 def makeCard():
-    title = input('Title of Card')
-    content = input('Content of Card')
-    card = Card(title='f{title}', content='f{content}')
+    title = input('Title of Card: ')
+    content = input('Content of Card: ')
+    card = Card(title=title, content=content, correct = 0, incorrect = 0)
     card.save()
 
 def startGame(amountOfCards):
     cards = Card.select().limit(amountOfCards)
-    print(cards)
+    for card in cards:
+        answer = input(f"Card Title: {card.title}: What is the content? ")
+        if(answer == card.content):
+            print('Correct!')
+            card = Card.get(Card.title == card.title)
+            card.correct = card.correct + 1
+        else:
+            print('Incorrect!')
+            card = Card.get(Card.title == card.title)
+            card.incorrect = card.incorrect + 1
 
 choice = input('Make a card or test knowledge?`\n1 - Make a card\n2 - Test knowledge\nChoice: ')
 
